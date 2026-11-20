@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from utilidades.constantes import (
-    COLUMNAS_CATEGORICAS, CODIGOS_NO_RESPUESTA_CAT, COLUMNAS_AYUNO, EDAD_ADULTO,
+    COLUMNAS_CATEGORICAS, CODIGOS_NO_RESPUESTA_CAT, COLUMNAS_NO_IMPUTAR, EDAD_ADULTO,
 )
 
 
@@ -72,14 +72,14 @@ class TypeCleaner:
 class MissingValueHandler:
     """Imputa nulos con mediana (numericas) y moda (categoricas).
 
-    Las columnas de ayuno (COLUMNAS_AYUNO) NO se imputan: se dejan como NaN
-    (son submuestra de ayuno; imputar mediana distorsiona los labs).
+    Las columnas de COLUMNAS_NO_IMPUTAR (labs de ayuno y respuestas de diabetes)
+    NO se imputan: se dejan como NaN.
     """
 
     def __init__(self, columnasNumericas=None, columnasCategoricas=None, columnasNoImputar=None):
         self.columnasNumericas = columnasNumericas
         self.columnasCategoricas = columnasCategoricas or COLUMNAS_CATEGORICAS
-        self.columnasNoImputar = columnasNoImputar or COLUMNAS_AYUNO
+        self.columnasNoImputar = columnasNoImputar if columnasNoImputar is not None else COLUMNAS_NO_IMPUTAR
 
     def imputar(self, df):
         nums = self.columnasNumericas if self.columnasNumericas is not None else [
@@ -95,7 +95,7 @@ class MissingValueHandler:
             elif col in self.columnasNoImputar and col in df.columns:
                 nulos = int(df[col].isna().sum())
                 if nulos > 0:
-                    print("NO imputado %s (ayuno): nulos=%d (submuestra de ayuno)" % (col, nulos))
+                    print("NO imputado %s: nulos=%d (ayuno o respuesta de diabetes)" % (col, nulos))
         for col in self.columnasCategoricas:
             if col in df.columns:
                 nulos = int(df[col].isna().sum())

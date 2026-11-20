@@ -6,7 +6,7 @@
 - Columnas finales: 27 (incluye OUTLIER_IQR)
 - Duplicados eliminados: 0
 - Nulos antes de imputar: 218868
-- Nulos despues de imputar: 105969
+- Nulos despues de imputar: 145822
 - Columnas validas para IQR: 15
 - Filas marcadas como outlier (IQR, k=1.5): 18310
 

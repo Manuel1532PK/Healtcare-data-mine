@@ -22,9 +22,14 @@ class DerivadorEtiqueta:
         diabetes = (df[self.colDiabetes] == 1) if self.colDiabetes in df.columns else pd.Series(False, index=df.index)
         obesidad = (df[self.colBmi] >= self.umbralBmi) if self.colBmi in df.columns else pd.Series(False, index=df.index)
         colAlto = (df[self.colColesterol] >= self.umbralColesterol) if self.colColesterol in df.columns else pd.Series(False, index=df.index)
-        df["Disease_Indicator"] = (diabetes | obesidad | colAlto).astype(int)
+        positivo = diabetes | obesidad | colAlto
+        # sin respuesta de diabetes y sin otro criterio positivo -> etiqueta desconocida (NaN), no 0
+        desconocido = (~positivo) & (df[self.colDiabetes].isna() if self.colDiabetes in df.columns else True)
+        etiqueta = positivo.astype(float)
+        etiqueta[desconocido] = np.nan
+        df["Disease_Indicator"] = etiqueta
         print("Disease_Indicator:")
-        print(df["Disease_Indicator"].value_counts().to_string())
+        print(df["Disease_Indicator"].value_counts(dropna=False).to_string())
         return df
 
 
@@ -52,7 +57,7 @@ class CodificadorOneHot:
 
     def codificar(self, df):
         if not self.columnas:
-            return df, []
+            return pd.DataFrame(index=df.index)
         dummies = pd.get_dummies(df[self.columnas].astype("category"), prefix=self.columnas, dtype=int)
         print("Dummies generadas:", list(dummies.columns))
         return dummies
@@ -68,7 +73,7 @@ class DiscretizadorEdad:
 
     def discretizar(self, df):
         if self.columna not in df.columns:
-            return None
+            raise KeyError(f"Falta la columna {self.columna} para discretizar")
         bins = self.discretizador.fit_transform(df[[self.columna]]).ravel()
         bordes = self.discretizador.bin_edges_[0].round(0)
         print("Bordes de edad:", [float(x) for x in bordes])

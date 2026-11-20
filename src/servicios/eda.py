@@ -38,7 +38,7 @@ class AnalizadorDescriptivo:
             fuera = int(((df[col] < li) | (df[col] > ls)).sum())
             filas.append({"variable": nombre_legible(col), "Q1": round(float(q1), 2), "Q3": round(float(q3), 2),
                           "IQR": round(float(iqr), 2), "lim_inf": round(float(li), 2),
-                          "lim_sup": round(float(ls), 2), "outliers": fuera})
+                          "lim_sup": round(float(ls), 2), "outliers": fuera, "nota": ""})
         return pd.DataFrame(filas)
 
 

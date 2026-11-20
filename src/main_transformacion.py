@@ -34,6 +34,10 @@ class PipelineTransformacion:
         print("\n=== Derivando Disease_Indicator ===")
         derivador = DerivadorEtiqueta()
         df = derivador.derivar(df)
+        sinEtiqueta = int(df["Disease_Indicator"].isna().sum())
+        df = df.loc[df["Disease_Indicator"].notna()].reset_index(drop=True)
+        df["Disease_Indicator"] = df["Disease_Indicator"].astype(int)
+        print("Filas sin etiqueta (sin respuesta de diabetes ni otro criterio) excluidas:", sinEtiqueta)
 
         # 2. Seleccionar variables
         print("\n=== Seleccionando variables ===")

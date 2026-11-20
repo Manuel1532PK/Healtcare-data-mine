@@ -75,6 +75,10 @@ CODIGOS_NO_RESPUESTA_CAT = {
 # Columnas de laboratorio de ayuno (submuestra): NO se imputan (se dejan NaN)
 COLUMNAS_AYUNO = ["LBXGLU", "LBDLDL", "LBXTR"]
 
+# Columnas que definen la etiqueta o son de respuesta del participante: NO se imputan.
+# Imputar DIQ010 con la mediana clasificaria como "no diabetico" a quien no respondio.
+COLUMNAS_NO_IMPUTAR = COLUMNAS_AYUNO + ["DIQ010", "DIQ160", "DIQ170"]
+
 # Edad a partir de la cual aplican los umbrales clinicos de adultos
 EDAD_ADULTO = 20
 
