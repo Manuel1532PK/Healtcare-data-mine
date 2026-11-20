@@ -1,21 +1,21 @@
 var1,var2,variable_1,variable_2,r,fuerza
+LBXTC,LBDLDL,Colesterol total (mg/dL),LDL (mg/dL),0.925,muy fuerte
 BMXBMI,BMXWAIST,IMC (kg/m2),Cintura (cm),0.894,muy fuerte
-DR1TKCAL,DR1TCARB,Energia (kcal),Carbohidratos (g),0.892,muy fuerte
+DR1TKCAL,DR1TCARB,Energia (kcal),Carbohidratos (g),0.893,muy fuerte
 DR1TKCAL,DR1TTFAT,Energia (kcal),Grasa total (g),0.89,muy fuerte
 DR1TSUGR,DR1TCARB,Azucar (g),Carbohidratos (g),0.848,muy fuerte
-BMXWT,BMXBMI,Peso (kg),IMC (kg/m2),0.818,muy fuerte
+BMXWT,BMXBMI,Peso (kg),IMC (kg/m2),0.817,muy fuerte
 DR1TKCAL,DR1TPROT,Energia (kcal),Proteina (g),0.811,muy fuerte
-BMXWT,BMXWAIST,Peso (kg),Cintura (cm),0.809,muy fuerte
+BMXWT,BMXWAIST,Peso (kg),Cintura (cm),0.807,muy fuerte
 DR1TPROT,DR1TTFAT,Proteina (g),Grasa total (g),0.752,muy fuerte
 BMXHT,BMXWAIST,Talla (cm),Cintura (cm),0.677,fuerte
 DR1TKCAL,DR1TSUGR,Energia (kcal),Azucar (g),0.676,fuerte
-BMXWT,BMXHT,Peso (kg),Talla (cm),0.668,fuerte
+BMXWT,BMXHT,Peso (kg),Talla (cm),0.666,fuerte
 DR1TCARB,DR1TTFAT,Carbohidratos (g),Grasa total (g),0.663,fuerte
-DR1TCARB,DR1TFIBE,Carbohidratos (g),Fibra (g),0.603,fuerte
+DR1TCARB,DR1TFIBE,Carbohidratos (g),Fibra (g),0.604,fuerte
+RIDAGEYR,BMXWT,Edad (anos),Peso (kg),0.603,fuerte
 DR1TPROT,DR1TCARB,Proteina (g),Carbohidratos (g),0.599,fuerte
-LBXTC,LBDLDL,Colesterol total (mg/dL),LDL (mg/dL),0.59,fuerte
-DR1TKCAL,DR1TFIBE,Energia (kcal),Fibra (g),0.585,fuerte
-RIDAGEYR,BMXWT,Edad (anos),Peso (kg),0.582,fuerte
-RIDAGEYR,BMXWAIST,Edad (anos),Cintura (cm),0.532,fuerte
-DR1TPROT,DR1TFIBE,Proteina (g),Fibra (g),0.519,fuerte
-BMXHT,BMXBMI,Talla (cm),IMC (kg/m2),0.512,fuerte
+DR1TKCAL,DR1TFIBE,Energia (kcal),Fibra (g),0.587,fuerte
+RIDAGEYR,BMXWAIST,Edad (anos),Cintura (cm),0.559,fuerte
+DR1TPROT,DR1TFIBE,Proteina (g),Fibra (g),0.521,fuerte
+BMXHT,BMXBMI,Talla (cm),IMC (kg/m2),0.513,fuerte

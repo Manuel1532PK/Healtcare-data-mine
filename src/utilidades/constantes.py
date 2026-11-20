@@ -58,8 +58,25 @@ COLUMNAS_NUMERICAS = [
     "DIQ010", "DIQ160", "DIQ170",
 ]
 
-# Codigos especiales de no respuesta en NHANES -> NaN
-CODIGOS_NO_RESPUESTA = [7, 9, 77, 99, 777, 999, 7777, 9999]
+# Codigos de no respuesta por columna (solo categoricas; NO aplicar a numericas)
+CODIGOS_NO_RESPUESTA_CAT = {
+    "RIAGENDR": [7, 9],
+    "RIDRETH1": [7, 9],
+    "DMDEDUC2": [7, 9, 77, 99],
+    "DMDMARTL": [7, 9, 77, 99],
+    "HUQ010": [7, 9],
+    "DIQ010": [7, 9],
+    "DIQ160": [7, 9],
+    "DIQ170": [7, 9],
+    "RIDSTATR": [],
+    "SDDSRVYR": [],
+}
+
+# Columnas de laboratorio de ayuno (submuestra): NO se imputan (se dejan NaN)
+COLUMNAS_AYUNO = ["LBXGLU", "LBDLDL", "LBXTR"]
+
+# Edad a partir de la cual aplican los umbrales clinicos de adultos
+EDAD_ADULTO = 20
 
 # Nombres legibles en espanol para variables NHANES (lectura continua)
 NOMBRES_VARIABLES = {

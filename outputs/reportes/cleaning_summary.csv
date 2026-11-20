@@ -1,2 +1,2 @@
 dataset,raw_rows,raw_cols,final_rows,final_cols,duplicates_dropped,rows_flagged_iqr,rows_removed_iqr,cols_checked_iqr,total_outliers_iqr
-nhanes_master,50965,26,50965,27,0,17116,0,12,26531
+nhanes_master,50965,26,50965,27,0,18310,0,15,28845

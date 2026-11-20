@@ -37,9 +37,11 @@ class PipelineTransformacion:
 
         # 2. Seleccionar variables
         print("\n=== Seleccionando variables ===")
+        # BMXBMI y LBXTC se EXCLUYEN de X: definen la etiqueta Disease_Indicator (evitar leakage)
+        # Labs de ayuno (LBXGLU, LBDLDL, LBXTR) se excluyen de X: submuestra de ayuno con nulos estructurales
+        # BMXBMI y LBXTC se excluyen: definen la etiqueta Disease_Indicator (evitar leakage)
         numericasPredictoras = [
-            "RIDAGEYR", "BMXWT", "BMXHT", "BMXBMI", "BMXWAIST",
-            "LBXGLU", "LBXTC", "LBDLDL", "LBXTR",
+            "RIDAGEYR", "BMXWT", "BMXHT", "BMXWAIST",
             "DR1TKCAL", "DR1TSUGR", "DR1TPROT", "DR1TCARB", "DR1TFIBE", "DR1TTFAT",
         ]
         selector = SelectorVariables(numericasPredictoras, COLUMNAS_CATEGORICAS)

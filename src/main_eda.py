@@ -129,8 +129,9 @@ class PipelineEDA:
         # 2. Calidad de datos
         doc.add_heading("2. Calidad de datos (herencia sesiones 3–4)", level=1)
         doc.add_paragraph(f"Filas: {len(df)} · Columnas: {len(df.columns)} · Nulos: {int(df.isna().sum().sum())} · Duplicados: {int(df.duplicated().sum())}")
-        doc.add_paragraph("Decisiones: imputación con mediana (numéricas) y moda (categóricas); outliers marcados con regla IQR (k=1,5, modo flag, sin eliminar pacientes); códigos de no respuesta NHANES (7, 9, …) tratados como NaN.")
+        doc.add_paragraph("Decisiones: códigos de no respuesta NHANES (7, 9, …) tratados como NaN SOLO en categóricas (por columna); menores de 20 años con educación/estado civil = 'No aplica (menor)'; labs de ayuno (glucosa, LDL, triglicéridos) NO imputados (submuestra de ayuno); outliers marcados con regla IQR (k=1,5, modo flag, sin eliminar pacientes).")
         doc.add_paragraph(f"Filas marcadas como outlier (IQR): {int(df['OUTLIER_IQR'].sum())} ({df['OUTLIER_IQR'].mean()*100:.1f} %).")
+        doc.add_paragraph("Nota: la población incluye menores (36,5 % < 20 años); los umbrales clínicos de adultos (IMC>=30, colesterol>=200) se aplican a todos los participantes. Los labs de ayuno tienen nulos estructurales (submuestra NHANES).")
 
         # 3. Análisis univariado
         doc.add_heading("3. Análisis univariado", level=1)

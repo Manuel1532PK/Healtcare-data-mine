@@ -9,7 +9,8 @@ import pandas as pd
 from repositorios.cargador import CargadorDataset
 from repositorios.nhanes import NhanesSchemaMapper, NhanesFusion
 from servicios.limpieza import (
-    TratadorDuplicados, NormalizadorCodigosNhanes, TypeCleaner, MissingValueHandler,
+    TratadorDuplicados, NormalizadorCodigosNhanes, NormalizadorMenores,
+    TypeCleaner, MissingValueHandler,
 )
 from servicios.calidad import Diagnosticador, AnalizadorOutliers, Validador
 from utilidades.constantes import (
@@ -61,10 +62,14 @@ class PipelineLimpiezaNhanes:
         tratador = TratadorDuplicados("SEQN")
         df = tratador.quitar(fusionado)
 
-        # 5. Codigos de no respuesta -> NaN
-        print("\n=== Normalizando codigos de no respuesta (7,9,...) -> NaN ===")
+        # 5. Codigos de no respuesta -> NaN (solo categoricas, por columna)
+        print("\n=== Normalizando codigos de no respuesta (solo categoricas) -> NaN ===")
         normalizador = NormalizadorCodigosNhanes()
         df = normalizador.normalizar(df)
+
+        # 5b. Menores de edad: educacion/estado civil = 'No aplica (menor)'
+        print("\n=== Ajustando categorias para menores de edad ===")
+        df = NormalizadorMenores().normalizar(df)
 
         # 6. Tipos de datos
         print("\n=== Convirtiendo tipos de datos ===")

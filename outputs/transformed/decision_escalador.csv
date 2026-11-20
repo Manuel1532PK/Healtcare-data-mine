@@ -2,12 +2,7 @@ variable,scaler,justificacion
 RIDAGEYR,StandardScaler,caso general (sin outliers graves tras limpieza)
 BMXWT,StandardScaler,caso general (sin outliers graves tras limpieza)
 BMXHT,StandardScaler,caso general (sin outliers graves tras limpieza)
-BMXBMI,StandardScaler,caso general (sin outliers graves tras limpieza)
 BMXWAIST,StandardScaler,caso general (sin outliers graves tras limpieza)
-LBXGLU,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales
-LBXTC,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales
-LBDLDL,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales
-LBXTR,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales
 DR1TKCAL,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales
 DR1TSUGR,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales
 DR1TPROT,StandardScaler,StandardScaler por defecto; RobustScaler opcional si se conservan outliers reales

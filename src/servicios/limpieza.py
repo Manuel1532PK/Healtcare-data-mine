@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from utilidades.constantes import COLUMNAS_CATEGORICAS, CODIGOS_NO_RESPUESTA
+from utilidades.constantes import (
+    COLUMNAS_CATEGORICAS, CODIGOS_NO_RESPUESTA_CAT, COLUMNAS_AYUNO, EDAD_ADULTO,
+)
 
 
 class TratadorDuplicados:
@@ -18,16 +20,34 @@ class TratadorDuplicados:
 
 
 class NormalizadorCodigosNhanes:
-    """Reemplaza codigos especiales de no respuesta (7, 9, ...) por NaN."""
+    """Reemplaza codigos de no respuesta SOLO en columnas categoricas (por columna)."""
 
-    def __init__(self, columnas=None):
-        self.columnas = columnas
+    def __init__(self, codigosPorColumna=None):
+        self.codigosPorColumna = codigosPorColumna or CODIGOS_NO_RESPUESTA_CAT
 
     def normalizar(self, df):
-        cols = self.columnas if self.columnas is not None else df.columns
-        for col in cols:
-            if col in df.columns and pd.api.types.is_numeric_dtype(df[col]):
-                df[col] = df[col].replace(CODIGOS_NO_RESPUESTA, np.nan)
+        for col, codigos in self.codigosPorColumna.items():
+            if col in df.columns:
+                df[col] = df[col].replace(codigos, np.nan)
+        return df
+
+
+class NormalizadorMenores:
+    """Para menores de edad, DMDEDUC2/DMDMARTL = 'No aplica (menor)' (codigo 0)."""
+
+    def __init__(self, colEdad="RIDAGEYR", columnas=None, edadMenor=EDAD_ADULTO):
+        self.colEdad = colEdad
+        self.columnas = columnas or ["DMDEDUC2", "DMDMARTL"]
+        self.edadMenor = edadMenor
+
+    def normalizar(self, df):
+        if self.colEdad not in df.columns:
+            return df
+        mask = df[self.colEdad] < self.edadMenor
+        for col in self.columnas:
+            if col in df.columns:
+                df.loc[mask, col] = 0
+        print("Menores (<%d anos) con educacion/estado civil = 'No aplica': %d" % (self.edadMenor, int(mask.sum())))
         return df
 
 
@@ -50,23 +70,32 @@ class TypeCleaner:
 
 
 class MissingValueHandler:
-    """Imputa nulos con mediana (numericas) y moda (categoricas)."""
+    """Imputa nulos con mediana (numericas) y moda (categoricas).
 
-    def __init__(self, columnasNumericas=None, columnasCategoricas=None):
+    Las columnas de ayuno (COLUMNAS_AYUNO) NO se imputan: se dejan como NaN
+    (son submuestra de ayuno; imputar mediana distorsiona los labs).
+    """
+
+    def __init__(self, columnasNumericas=None, columnasCategoricas=None, columnasNoImputar=None):
         self.columnasNumericas = columnasNumericas
         self.columnasCategoricas = columnasCategoricas or COLUMNAS_CATEGORICAS
+        self.columnasNoImputar = columnasNoImputar or COLUMNAS_AYUNO
 
     def imputar(self, df):
         nums = self.columnasNumericas if self.columnasNumericas is not None else [
             c for c in df.columns if pd.api.types.is_numeric_dtype(df[c]) and c != "SEQN"
         ]
         for col in nums:
-            if col in df.columns:
+            if col in df.columns and col not in self.columnasNoImputar:
                 mediana = df[col].median()
                 nulos = int(df[col].isna().sum())
                 if nulos > 0:
                     df[col] = df[col].fillna(mediana)
-                    print(f"Imputando {col}: mediana={mediana:.2f}, nulos={nulos}")
+                    print("Imputando %s: mediana=%.2f, nulos=%d" % (col, mediana, nulos))
+            elif col in self.columnasNoImputar and col in df.columns:
+                nulos = int(df[col].isna().sum())
+                if nulos > 0:
+                    print("NO imputado %s (ayuno): nulos=%d (submuestra de ayuno)" % (col, nulos))
         for col in self.columnasCategoricas:
             if col in df.columns:
                 nulos = int(df[col].isna().sum())
@@ -74,5 +103,5 @@ class MissingValueHandler:
                     moda = df[col].mode()
                     if len(moda) > 0:
                         df[col] = df[col].fillna(moda.iloc[0])
-                        print(f"Imputando {col}: moda={moda.iloc[0]}, nulos={nulos}")
+                        print("Imputando %s: moda=%s, nulos=%d" % (col, moda.iloc[0], nulos))
         return df

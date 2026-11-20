@@ -111,6 +111,8 @@ class AnalizadorPCA:
         return acum, para80, para90
 
     def graficar(self, ruta=None):
+        import matplotlib
+        matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         var = self.pca.explained_variance_ratio_
         acum = var.cumsum()
@@ -128,7 +130,8 @@ class AnalizadorPCA:
         if ruta is not None:
             fig.savefig(ruta, dpi=100, bbox_inches="tight")
             print("Figura guardada:", ruta)
-        plt.show()
+        if matplotlib.get_backend().lower() != "agg":
+            plt.show()
         return fig
 
 
