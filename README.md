@@ -104,6 +104,14 @@ python src/main_analisis_clustering.py  # 6) auditoría y diagnóstico previo a 
 - Reportamos la silueta baja con honestidad: son perfiles amplios, no grupos perfectamente separados.
 - Evidencia: `docs/analisis_clustering.ipynb`, `outputs/reportes/analisis_pre_clustering.md` y `outputs/reportes/clustering_*`.
 
+### Fase 6 — Agrupamiento final con K-means
+- Agrupamos las 48 710 personas con las 30 columnas del conjunto C y `KMeans(n_clusters=3, n_init=10, random_state=42)`.
+- Silueta: 0,2182 con 2 000 personas y 0,2213 con 10 000.
+- Grupos: 9 130 / 23 304 / 16 276 personas. Prevalencia de la etiqueta por grupo: 0,048 / 0,481 / 0,637; la etiqueta no entró al entrenamiento.
+- Combinamos métodos: un dendrograma Ward sobre una muestra de 5 000 personas confirma el corte en 3 grupos (salto entre las alturas 78,8 y 135,6). Su acuerdo con K-means en esa muestra es ARI 0,59 (moderado).
+- Resultados: `outputs/reportes/clustering_etiquetas.csv`, `clustering_perfil_final.csv`, `clustering_comparacion_metodos.csv`, `clustering_veredicto.md` y `outputs/figuras/dendrograma_muestra.png`.
+- Ejecución: `python src/main_clustering.py`.
+
 ## Limitaciones conocidas (pendientes)
 - Ajustamos el escalado y el PCA con todo el conjunto en las fases anteriores; en esta fase creamos la partición train/test y re-escalamos solo las numéricas dentro del Pipeline, sin rehacer esas fases.
 - La población mezcla menores y adultos; los umbrales clínicos se aplican a todos.
