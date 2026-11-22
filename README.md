@@ -2,7 +2,7 @@
 
 Proyecto de **Minería de Datos** (Corporación Universitaria Minuto de Dios, UNIMINUTO). Se limpia,
 integra, transforma y analiza el dataset **NHANES** (5 ciclos, 2005–2014) junto con el catálogo
-farmacológico **Drugs_product**, siguiendo las sesiones 2, 3, 4 y 5 del curso.
+farmacológico **Drugs_product**.
 
 **Equipo (MIMETIC):** Manuel José Rivera Guzmán · Julián Andrés Correa Cuevas
 **Asignatura:** Minería de Datos · Ibagué · 2026-2
@@ -27,18 +27,19 @@ pip install -r requirements.txt
 ```
 healtcare/
 ├── data/raw/                  # 5 CSV NHANES + Drugs_product.csv
-├── docs/                      # plan y notebooks de evidencia
+├── docs/                      # plan, notebooks de evidencia y clasificación NB/KNN
 ├── outputs/
 │   ├── cleaned/               # nhanes_master_cleaned.csv(.gz), nhanes_master_cruzado.csv
 │   ├── transformed/           # X_nhanes.csv, y_nhanes.csv, decision_escalador.csv, varianza_pca.csv
 │   ├── eda/                   # resumen_descriptivo.csv, outliers_iqr.csv, pares_correlacion.csv
 │   ├── figuras/               # histogramas, boxplots, barras, scatter, heatmap, matriz de dispersión, PCA
-│   └── reportes/              # cleaning_summary.csv, cleaning_report.md, informe_eda_nhanes.docx
+│   └── reportes/              # cleaning_*, informe_eda_nhanes.docx y reportes de clasificación
 ├── src/
 │   ├── main.py                # Fase 1: limpieza NHANES
 │   ├── main_cruce.py          # Fase 1: validación de integración + catálogo Drugs
 │   ├── main_transformacion.py # Fase 2: transformación y escalado (StandardScaler) + PCA
 │   ├── main_eda.py            # Fase 3: EDA (estadística, figuras, correlación, informe)
+│   ├── main_clasificacion.py  # Naive Bayes y KNN (split, métricas, k)
 │   ├── repositorios/          # cargador, nhanes (schema mapper + fusión)
 │   ├── servicios/             # limpieza, calidad (IQR), cruce, transformación, eda
 │   └── utilidades/            # constantes y rutas
@@ -53,6 +54,7 @@ python src/main.py                 # 1) Limpieza NHANES
 python src/main_cruce.py           # 2) Validación de integración + CSV cruzado
 python src/main_transformacion.py  # 3) Transformación y escalado (StandardScaler) + PCA
 python src/main_eda.py             # 4) EDA (figuras + informe docx)
+python src/main_clasificacion.py   # 5) NB y KNN (métricas y veredicto)
 ```
 
 ## Resultados por fase
@@ -82,16 +84,23 @@ python src/main_eda.py             # 4) EDA (figuras + informe docx)
 - Correlación de Pearson: 20 pares con |r| ≥ 0,5.
 - Informe de 6 secciones: `informe_eda_nhanes.docx`. Los hallazgos se calculan a partir de los datos.
 
+### Fase 4 — Clasificación NB y KNN
+- Creamos una partición train/test estratificada 75/25 (`random_state=42`) sobre `X_nhanes.csv` (48 710 × 42).
+- Comparamos GaussianNB y KNN con `ColumnTransformer` (solo numéricas escaladas).
+- Probamos `k = 1, 5, 11, 21, 51` y también `weights="distance"`.
+- Obtuvimos en test: KNN k=51 accuracy 0,825 / F1 0,792; GaussianNB accuracy 0,762 / F1 0,754 / recall 0,889.
+- Recomendamos KNN k=51 como modelo principal y GaussianNB como línea base.
+- Dejamos la evidencia en `docs/clasificacion_nb_knn.ipynb` y en los reportes de clasificación de `outputs/reportes/`.
+
 ## Limitaciones conocidas (pendientes)
-- No hay partición train/test: el escalador y el PCA se ajustan con todo el conjunto. Antes de modelar, ajustar solo con train.
+- Ajustamos el escalado y el PCA con todo el conjunto en las fases anteriores; en esta fase creamos la partición train/test y re-escalamos solo las numéricas dentro del Pipeline, sin rehacer esas fases.
 - La población mezcla menores y adultos; los umbrales clínicos se aplican a todos.
-- Los notebooks `docs/*.ipynb` no se han ejecutado con salida guardada.
+- Los notebooks originales de limpieza, transformación y EDA no tienen salida guardada; el de clasificación sí.
 - `Drugs_product` solo se resume (cruce con medicamentos no implementado).
 
 ## Ramas
 - `main`: rama principal (default).
 
 ## Referencias
-- Presentación del curso: `Presentacion/mineria_de_datos/sesion2..5`.
 - Chapman, P. et al. (2000). *CRISP-DM 1.0*. SPSS.
 - Han, J., Kamber, M. y Pei, J. (2012). *Data mining: Concepts and techniques* (3.ª ed.). Elsevier.
