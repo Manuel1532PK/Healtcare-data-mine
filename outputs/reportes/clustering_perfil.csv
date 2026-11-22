@@ -1,0 +1,4 @@
+cluster,n,prevalencia,edad_z,cintura_z,proporcion_menores_proxy,proporcion_hombres
+0,9130,0.4807,0.0861,0.3138,0.2789,0.7125
+1,23304,0.6371,0.6759,0.5262,0.0689,0.4245
+2,16276,0.0484,-1.0161,-0.9294,0.9922,0.4739

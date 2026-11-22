@@ -27,19 +27,20 @@ pip install -r requirements.txt
 ```
 healtcare/
 ├── data/raw/                  # 5 CSV NHANES + Drugs_product.csv
-├── docs/                      # plan, notebooks de evidencia y clasificación NB/KNN
+├── docs/                      # plan, notebooks de evidencia, clasificación y análisis de agrupamiento
 ├── outputs/
 │   ├── cleaned/               # nhanes_master_cleaned.csv(.gz), nhanes_master_cruzado.csv
 │   ├── transformed/           # X_nhanes.csv, y_nhanes.csv, decision_escalador.csv, varianza_pca.csv
 │   ├── eda/                   # resumen_descriptivo.csv, outliers_iqr.csv, pares_correlacion.csv
 │   ├── figuras/               # histogramas, boxplots, barras, scatter, heatmap, matriz de dispersión, PCA
-│   └── reportes/              # cleaning_*, informe_eda_nhanes.docx y reportes de clasificación
+│   └── reportes/              # cleaning_*, informe_eda_nhanes.docx, clasificación_* y clustering_*
 ├── src/
 │   ├── main.py                # Fase 1: limpieza NHANES
 │   ├── main_cruce.py          # Fase 1: validación de integración + catálogo Drugs
 │   ├── main_transformacion.py # Fase 2: transformación y escalado (StandardScaler) + PCA
 │   ├── main_eda.py            # Fase 3: EDA (estadística, figuras, correlación, informe)
 │   ├── main_clasificacion.py  # Naive Bayes y KNN (split, métricas, k)
+│   ├── main_analisis_clustering.py  # auditoría y diagnóstico previo a K-means
 │   ├── repositorios/          # cargador, nhanes (schema mapper + fusión)
 │   ├── servicios/             # limpieza, calidad (IQR), cruce, transformación, eda
 │   └── utilidades/            # constantes y rutas
@@ -55,6 +56,7 @@ python src/main_cruce.py           # 2) Validación de integración + CSV cruzad
 python src/main_transformacion.py  # 3) Transformación y escalado (StandardScaler) + PCA
 python src/main_eda.py             # 4) EDA (figuras + informe docx)
 python src/main_clasificacion.py   # 5) NB y KNN (métricas y veredicto)
+python src/main_analisis_clustering.py  # 6) auditoría y diagnóstico previo a K-means
 ```
 
 ## Resultados por fase
@@ -91,6 +93,16 @@ python src/main_clasificacion.py   # 5) NB y KNN (métricas y veredicto)
 - Obtuvimos en test: KNN k=51 accuracy 0,825 / F1 0,792; GaussianNB accuracy 0,762 / F1 0,754 / recall 0,889.
 - Recomendamos KNN k=51 como modelo principal y GaussianNB como línea base.
 - Dejamos la evidencia en `docs/clasificacion_nb_knn.ipynb` y en los reportes de clasificación de `outputs/reportes/`.
+
+### Fase 5 — Análisis previo al agrupamiento K-means
+- Auditamos `X_nhanes.csv`: 48 710 × 42, sin nulos ni infinitos, 152 filas duplicadas, 10 numéricas escaladas y 32 dummies en 7 grupos one-hot.
+- Comparamos cuatro listas de variables: todas (42), sin variables de encuesta (35), sin esas y sin una referencia por grupo (30) y solo numéricas (10).
+- Descartamos `SDDSRVYR` y `RIDSTATR` porque son de diseño de encuesta, y quitamos una dummy de referencia por grupo para no duplicar categorías.
+- Corremos K-means para `k = 2..10`. La mejor opción estable es el conjunto de 30 columnas con **k=3** (silueta 0,218 con muestra de 2 000).
+- Verificamos la silueta con 2 000, 5 000 y 10 000 filas: 0,2182 / 0,2212 / 0,2213. El pico de memoria medido fue de **61,9 MB**.
+- Perfilamos los grupos sin usar la etiqueta para entrenar: las prevalencias van de 0,048 a 0,637, así que los perfiles capturan señales reales.
+- Reportamos la silueta baja con honestidad: son perfiles amplios, no grupos perfectamente separados.
+- Evidencia: `docs/analisis_clustering.ipynb`, `outputs/reportes/analisis_pre_clustering.md` y `outputs/reportes/clustering_*`.
 
 ## Limitaciones conocidas (pendientes)
 - Ajustamos el escalado y el PCA con todo el conjunto en las fases anteriores; en esta fase creamos la partición train/test y re-escalamos solo las numéricas dentro del Pipeline, sin rehacer esas fases.
