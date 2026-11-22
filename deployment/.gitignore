@@ -1,0 +1,4 @@
+backend/.venv/
+azure/artefactos/
+__pycache__/
+*.pyc

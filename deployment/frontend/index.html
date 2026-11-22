@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lo que encontramos en los datos · NHANES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="cabecera-interna">
+      <div class="barra-superior">
+        <div class="marca">Healtcare data mine <span class="separador">/</span> Informe interactivo</div>
+        <div class="modo" role="group" aria-label="Forma de ver la página">
+          <button id="modo-sencillo" class="activo" type="button">En simple</button>
+          <button id="modo-tecnico" type="button">Con números</button>
+        </div>
+      </div>
+      <div class="hero">
+        <div>
+          <p class="kicker">Datos reales · 48 710 personas</p>
+          <h1>Lo que encontramos<br>en los datos</h1>
+        </div>
+        <p class="bajada">Una mirada a cómo se comporta la salud de esta muestra. Elija, mueva, compare: todo cambia enfrente suyo.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="aviso"><span>Nota</span> Trabajo de clase con datos reales. No sirve para diagnósticos médicos.</div>
+
+  <main>
+    <section class="seccion">
+      <div class="seccion-titulo">
+        <span class="numero-seccion">01</span>
+        <p class="rubro">La muestra</p>
+        <h2>Las personas</h2>
+        <p class="intro">Acá decidimos a quién mirar. Los números de abajo se recalculan mientras mueve cada control.</p>
+      </div>
+      <div class="seccion-contenido">
+        <div class="controles">
+          <div class="control">
+            <label for="filtro-grupo">Grupo</label>
+            <select id="filtro-grupo">
+              <option value="">Todos</option>
+              <option value="0">Grupo intermedio</option>
+              <option value="1">Grupo de adultos</option>
+              <option value="2">Grupo de jóvenes</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="filtro-etiqueta">Respuesta</label>
+            <select id="filtro-etiqueta">
+              <option value="">Todas</option>
+              <option value="1">Sí</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="filtro-sexo">Sexo</label>
+            <select id="filtro-sexo">
+              <option value="">Todos</option>
+              <option value="1">Hombre</option>
+              <option value="0">Mujer</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="filtro-edad-min">Desde (<span id="edad-min-valor">-3</span>)</label>
+            <input id="filtro-edad-min" type="range" min="-3" max="3" step="0.5" value="-3">
+          </div>
+          <div class="control">
+            <label for="filtro-edad-max">Hasta (<span id="edad-max-valor">3</span>)</label>
+            <input id="filtro-edad-max" type="range" min="-3" max="3" step="0.5" value="3">
+          </div>
+          <div class="control control-boton">
+            <button id="limpiar-filtros" class="secundario" type="button">Quitar filtros</button>
+          </div>
+        </div>
+        <p class="ayuda">En la escala de edad, 0 es el promedio: -3 son los más jóvenes y +3 los mayores.</p>
+        <p id="filtros-activos" class="filtros-activos"><span class="punto-vivo"></span> Todas las personas</p>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="seccion-titulo">
+        <span class="numero-seccion">02</span>
+        <p class="rubro">Panorama</p>
+        <h2>Lo que tenemos enfrente</h2>
+        <p class="intro">Cifras vivas de la selección actual.</p>
+      </div>
+      <div class="seccion-contenido">
+        <div class="cifras">
+          <div class="cifra"><span class="numero" id="card-personas">…</span><span class="etiqueta">personas en la selección</span></div>
+          <div class="cifra"><span class="numero" id="card-prevalencia">…</span><span class="etiqueta">de cada 100 tienen la condición</span></div>
+          <div class="cifra"><span class="numero" id="card-grupo">…</span><span class="etiqueta">grupo más común</span></div>
+        </div>
+        <div class="cifras tecnico">
+          <div class="cifra"><span class="numero" id="card-filas">…</span><span class="etiqueta">filas en total</span></div>
+          <div class="cifra"><span class="numero" id="card-columnas">…</span><span class="etiqueta">medidas por persona</span></div>
+          <div class="cifra"><span class="numero" id="card-duplicados">…</span><span class="etiqueta">filas repetidas</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="seccion-titulo">
+        <span class="numero-seccion">03</span>
+        <p class="rubro">Primer camino</p>
+        <h2>¿Se puede anticipar la respuesta?</h2>
+        <p class="intro">Aprendemos con una parte de las personas y probamos con otra. Así sabemos si de verdad funciona.</p>
+      </div>
+      <div class="seccion-contenido">
+        <div class="control control-ancho">
+          <label for="k-select">Cuántos parecidos mira antes de responder</label>
+          <select id="k-select">
+            <option value="1">1 parecido</option>
+            <option value="5">5 parecidos</option>
+            <option value="11">11 parecidos</option>
+            <option value="21">21 parecidos</option>
+            <option value="51" selected>51 parecidos (el que elegimos)</option>
+          </select>
+        </div>
+
+        <div class="k-panel">
+          <div class="k-cifra">
+            <span class="k-numero" id="k-grande">…</span>
+            <span class="k-unidad">de cada 1000</span>
+          </div>
+          <div class="k-texto">
+            <p class="k-titulo" id="k-titulo">Aciertos en la prueba</p>
+            <p class="k-frase" id="k-frase">Cargando…</p>
+            <p class="k-resumen" id="k-resumen"></p>
+          </div>
+        </div>
+
+        <p class="ayuda">Cuantos más mira, más estable sale la respuesta, pero menos detalles capta. Mueva la elección y observe cómo cambia todo este bloque.</p>
+        <div id="barrido-chart" class="grafico-barras"></div>
+
+        <div class="tecnico">
+          <h3>Los números completos</h3>
+          <div id="metricas-table" class="tabla"></div>
+          <h3>Dónde se equivoca</h3>
+          <div id="matrices-table" class="tabla"></div>
+        </div>
+
+        <h3>Pruebe con una persona</h3>
+        <p class="ayuda">Mueva los valores y la respuesta se actualiza sola. 0 es el promedio de todos.</p>
+        <form id="form-clasificacion" class="formulario">
+          <label>Edad <input name="edad" type="range" min="-3" max="3" step="0.1" value="0"></label>
+          <label>Cintura <input name="cintura" type="range" min="-3" max="3" step="0.1" value="0"></label>
+          <label>Comida por día <input name="calorias" type="range" min="-3" max="3" step="0.1" value="0"></label>
+          <label>Sexo
+            <select name="sexo"><option value="1">Hombre</option><option value="0">Mujer</option></select>
+          </label>
+          <button type="submit">Ver qué dice cada uno</button>
+        </form>
+        <p id="clas-resultado" class="resultado"></p>
+
+        <div class="tecnico">
+          <h3>Cuando no están de acuerdo</h3>
+          <div id="desacuerdos-table" class="tabla"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="seccion-titulo">
+        <span class="numero-seccion">04</span>
+        <p class="rubro">Segundo camino</p>
+        <h2>Grupos que aparecieron solos</h2>
+        <p class="intro">Nadie les dijo quién tenía la condición: solo juntamos a los parecidos. Después miramos qué tenía cada grupo.</p>
+      </div>
+      <div class="seccion-contenido">
+        <div id="perfil-cards" class="cifras cifras-grupos"></div>
+        <div class="tecnico">
+          <h3>Los números de cada grupo</h3>
+          <div id="perfil-table" class="tabla"></div>
+        </div>
+
+        <h3>Mueva el corte del árbol</h3>
+        <p class="ayuda">El programa dibujó un árbol de parecidos. Según dónde lo cortemos, salen más o menos grupos.</p>
+        <div class="corte-panel">
+          <div class="control control-ancho">
+            <label for="corte-slider">Altura del corte (<span id="corte-valor">100</span>)</label>
+            <input id="corte-slider" type="range" min="20" max="200" step="5" value="100">
+          </div>
+          <div class="corte-numero">
+            <span id="corte-grande">…</span>
+            <small>grupos</small>
+          </div>
+        </div>
+        <p id="corte-resultado" class="resultado"></p>
+        <div id="corte-barras" class="grafico-barras"></div>
+
+        <h3>¿Coinciden dos formas de agrupar?</h3>
+        <div id="comparacion-grid" class="cifras"></div>
+        <img id="dendrograma" class="imagen" alt="Árbol de parecidos de 5 000 personas">
+
+        <h3>Pruebe con una persona</h3>
+        <form id="form-clustering" class="formulario">
+          <label>Edad <input name="edad" type="range" min="-3" max="3" step="0.1" value="-1"></label>
+          <label>Cintura <input name="cintura" type="range" min="-3" max="3" step="0.1" value="-1"></label>
+          <label>Comida por día <input name="calorias" type="range" min="-3" max="3" step="0.1" value="0"></label>
+          <label>Sexo
+            <select name="sexo"><option value="1">Hombre</option><option value="0">Mujer</option></select>
+          </label>
+          <button type="submit">Ver en qué grupo cae</button>
+        </form>
+        <p id="clus-resultado" class="resultado"></p>
+
+        <h3>Casos reales</h3>
+        <p id="muestra-rango" class="resumen-linea"></p>
+        <div id="muestra-table" class="tabla"></div>
+        <button id="descarga-btn" class="boton-descarga" type="button">Descargar lo que está viendo</button>
+        <p id="descarga-estado" class="resumen-linea"></p>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="seccion-titulo">
+        <span class="numero-seccion">05</span>
+        <p class="rubro">Apoyo</p>
+        <h2>Palabras que usamos</h2>
+        <p class="intro">Por si algo queda dudoso.</p>
+      </div>
+      <div class="seccion-contenido glosario">
+        <details>
+          <summary>¿Qué significa el porcentaje de arriba?</summary>
+          <p>De cada 100 personas de la selección, cuántas tienen la condición que estamos estudiando.</p>
+        </details>
+        <details>
+          <summary>¿Por qué no están bien separados los grupos?</summary>
+          <p>Porque la gente se parece entre sí. Nuestro número de separación es bajo: son perfiles amplios, no cajitas limpias. Lo decimos así, sin esconderlo.</p>
+        </details>
+        <details>
+          <summary>¿Cómo sabemos que los grupos son creíbles?</summary>
+          <p>Probamos dos formas distintas de agrupar y se parecen bastante: 0,59 sobre 1.</p>
+        </details>
+        <details>
+          <summary>¿Por qué acá no probamos con respuestas?</summary>
+          <p>Porque nadie nos dijo de antemano cuál era el grupo correcto. No había una respuesta para acertar.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer>Trabajo de clase con datos reales · Hecho por nuestro equipo</footer>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
