@@ -1,2 +1,2 @@
-// Cambiar esta URL por la de Render cuando despleguemos.
-window.BACKEND_URL = "http://localhost:8000";
+// API desplegada en Render.
+window.BACKEND_URL = "https://healtcare-data-mine.onrender.com";
