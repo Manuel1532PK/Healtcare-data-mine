@@ -1,0 +1,2 @@
+muestra,k,ari_jerarquico_vs_kmeans,tamanos_jerarquico,tamanos_kmeans_muestra,corte_3_grupos_desde,corte_3_grupos_hasta,tiempo_jerarquico_s,pico_memoria_jerarquico_mb,tiempo_kmeans_s
+5000,3,0.5856,1649/1815/1536,959/2413/1628,78.8191,135.5595,1.28,107.3,0.18
