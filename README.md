@@ -44,6 +44,10 @@ healtcare/
 │   ├── repositorios/          # cargador, nhanes (schema mapper + fusión)
 │   ├── servicios/             # limpieza, calidad (IQR), cruce, transformación, eda
 │   └── utilidades/            # constantes y rutas
+├── deployment/                # demostración interactiva
+│   ├── azure/                 # exportar_modelo.py y subir_datos.ps1
+│   ├── backend/               # FastAPI de solo lectura
+│   └── frontend/              # HTML, CSS y JS de la página
 └── README.md
 ```
 
@@ -57,6 +61,7 @@ python src/main_transformacion.py  # 3) Transformación y escalado (StandardScal
 python src/main_eda.py             # 4) EDA (figuras + informe docx)
 python src/main_clasificacion.py   # 5) NB y KNN (métricas y veredicto)
 python src/main_analisis_clustering.py  # 6) auditoría y diagnóstico previo a K-means
+python src/main_clustering.py           # 7) agrupamiento final con K-means
 ```
 
 ## Resultados por fase
@@ -111,6 +116,19 @@ python src/main_analisis_clustering.py  # 6) auditoría y diagnóstico previo a 
 - Combinamos métodos: un dendrograma Ward sobre una muestra de 5 000 personas confirma el corte en 3 grupos (salto entre las alturas 78,8 y 135,6). Su acuerdo con K-means en esa muestra es ARI 0,59 (moderado).
 - Resultados: `outputs/reportes/clustering_etiquetas.csv`, `clustering_perfil_final.csv`, `clustering_comparacion_metodos.csv`, `clustering_veredicto.md` y `outputs/figuras/dendrograma_muestra.png`.
 - Ejecución: `python src/main_clustering.py`.
+
+## Demostración interactiva
+
+La página pública está en **https://nhanes-demo.netlify.app** y la API que la alimenta en
+**https://healtcare-data-mine.onrender.com** (`/health` responde `modo: azure`).
+
+- **Azure Blob Storage:** copias de los CSV, reportes, modelos y figuras en el contenedor `nhanes`.
+- **Render:** FastAPI de solo lectura, con `MODO_LOCAL=0` para leer desde Azure.
+- **Netlify:** página con filtros en vivo, selector de parecidos del KNN, corte del árbol,
+  formularios de prueba y descarga del CSV filtrado.
+- **Local:** con `MODO_LOCAL=1` la API lee los archivos del repositorio. Detalles en `deployment/GUIA.md`.
+- Los artefactos se generan con `python deployment/azure/exportar_modelo.py` y se suben con
+  `deployment/azure/subir_datos.ps1`.
 
 ## Limitaciones conocidas (pendientes)
 - Ajustamos el escalado y el PCA con todo el conjunto en las fases anteriores; en esta fase creamos la partición train/test y re-escalamos solo las numéricas dentro del Pipeline, sin rehacer esas fases.
